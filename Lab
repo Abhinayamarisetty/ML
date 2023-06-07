@@ -1,0 +1,86 @@
+mport matplotlib.pyplot as plt
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report,confusion_matrix
+x=np.arange(10).reshape(-1,1)
+y=np.array([0,0,0,0,1,1,1,1,1,1])
+print(x)
+print(y)
+m=LogisticRegression(solver='liblinear',random_state=0)
+m.fit(x,y)
+LogisticRegression(C=1.0,class_weight=None,dual=False,fit_intercept=True,
+                   intercept_scaling=1,l1_ratio=None,max_iter=100,
+                   multi_class='warn',n_jobs=None,penalty='l2',
+                   random_state=0,solver='liblinear',tol=0.0001,verbose=0,
+                   warm_start=False)
+m=LogisticRegression(solver='liblinear',random_state=0).fit(x,y)
+m.classes_
+m.intercept_
+m.coef_
+m.predict_proba(x)
+m.score(x,y)
+confusion_matrix(y,m.predict(x))
+cm=confusion_matrix(y,m.predict(x))
+fit,ax=plt.subplots(figsize=(8,8))
+ax.imshow(cm)
+ax.grid(False)
+ax.xaxis.set(ticks=(0,1),ticklabels=("Predicted 0's","Predicted 0's"))
+ax.yaxis.set(ticks=(0,1),ticklabels=("Actual 0's","Actual 0's"))
+ax.set_ylim(1.5,-0.5)
+for i in range(2):
+  for j in range(2):
+    ax.text(j,i,cm[i,j],ha='center',va='center',color='red')
+plt.show()
+print(classification_report(y,m.predict(x)))
+
+
+
+====================================================================================================================================================
+from numpy import where
+from collections import Counter
+from sklearn.datasets import make_blobs
+from matplotlib import pyplot
+X,y=make_blobs(n_samples=1000,centers=2,random_state=1)
+print(X.shape,y.shape)
+c=Counter(y)
+print(c)
+for i in range(10):
+  print(X[i],y[i])
+for label,_ in c.items():
+  row_ix=where(y==label)[0]
+  plt.scatter(X[row_ix,0],X[row_ix,1],label=str(label))
+plt.legend()
+plt.show()
+
+====================================================================================================================================================
+%pip install mlxtend --upgrade
+from pandas import read_csv
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from mlxtend.evaluate import bias_variance_decomp
+url='https://raw.githubusercontent.com/jbrownlee/Datasets/master/housing.csv'
+df=read_csv(url,header=None)
+data=df.values
+X,y=data[:,:-1],data[:,-1]
+X_tr,X_te,y_tr,y_te=train_test_split(X,y,test_size=0.33,random_state=1)
+model=LinearRegression()
+mse,bias,var=bias_variance_decomp(model,X_tr,y_tr,X_te,y_te,loss='mse',num_rounds=200,random_seed=1)
+print("MSE:%3f"%mse)
+print("Bias:%3f"%bias)
+print("Variance:%3f"%var)
+import pandas as pd
+data={
+    "A":["TeamA","TeamB","TeamA","TeamC","TeamC"],
+    "B":[50,20,50,40,40],
+    "C":[True,False,True,False,False]
+}
+df=pd.DataFrame(data)
+display(df.drop_duplicates()
+from sklearn import datasets
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import KFold,cross_val_score
+X,y=datasets.load_iris(return_X_y=True)
+clf=DecisionTreeClassifier(random_state=42)
+k_f=KFold(n_splits=5)
+scores=cross_val_score(clf,X,y,cv=k_f)
+print(scores,scores.mean(),len(scores))
